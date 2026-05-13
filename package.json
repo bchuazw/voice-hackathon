@@ -1,0 +1,36 @@
+{
+  "name": "archimedes",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Voice agent for shower thoughts. ElevenHacks #8 (Cursor) submission.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@elevenlabs/client": "^0.1.0",
+    "@elevenlabs/elevenlabs-js": "^1.0.0",
+    "@notionhq/client": "^2.2.15",
+    "@supabase/supabase-js": "^2.45.0",
+    "googleapis": "^144.0.0",
+    "next": "14.2.5",
+    "openai": "^4.60.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.39",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.5.3"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}
