@@ -165,3 +165,49 @@ voice-hackathon/
 5. Post to X, LinkedIn, Instagram, TikTok with the video + tags.
 
 Tags: `@cursor_ai`, `@elevenlabsio`, `#ElevenHacks`
+
+---
+
+## Build status (current state of this repo)
+
+The voice loop, classifier, integrations, memory, and resurfacing endpoint
+are all wired together. **`npm run typecheck` and `npm run build` pass clean.**
+
+### Run it now
+
+```bash
+npm install
+npm run dev
+# open http://localhost:3000
+```
+
+With **zero env vars** the demo still works end-to-end:
+- Tap **Play storyboard** → injects four canonical thoughts → routes them through
+  the rule-based classifier → renders the live feed.
+- Tap **Morning digest** → generates a templated digest script. (Add
+  `ELEVENLABS_API_KEY` to also hear it spoken; add `ELEVENLABS_USER_VOICE_ID`
+  to hear it in your cloned voice — the wow moment.)
+- Integration adapters return `{ok: false, error: 'no-token'}` when their
+  keys are missing instead of throwing, so the voice loop never breaks.
+
+Add keys progressively in `.env.local` to upgrade each layer.
+
+### Demo / submission artifacts
+
+| File | Purpose |
+|---|---|
+| `SUBMISSION_VIDEO_SCRIPT.md` | 75-second shot list with lines, captions, timings |
+| `DEMO_GUIDE.md` | operator's manual — what to tap on the phone in each shot |
+| `SOCIAL_POSTS.md` | platform-by-platform copy (X / LinkedIn / Reels / TikTok) + submission form text |
+| `public/cover.svg` | submission cover image |
+
+### Endpoints
+
+| Route | Verb | What |
+|---|---|---|
+| `/api/session` | GET | mint a ConvAI signed URL |
+| `/api/capture` | POST | classify + dispatch + persist a captured transcript |
+| `/api/thoughts` | GET | feed of recent thoughts (UI) |
+| `/api/resurface` | GET | digest script + cloned-voice audio |
+| `/api/demo/seed` | POST | inject the four storyboard thoughts (`?reset=1` to wipe; `?live=1` to re-classify with the live LLM) |
+| `/api/health` | GET | which integrations are configured |

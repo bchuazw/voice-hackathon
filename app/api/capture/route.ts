@@ -2,15 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { classifyThought } from '@/lib/router';
 import { dispatch } from '@/lib/integrations';
 import { saveThought } from '@/lib/memory';
+import type { ClassifiedThought, TargetApp } from '@/lib/types';
 
 /**
- * Receives a captured transcript from the ConvAI agent (via tool call OR
- * directly from the frontend after a turn ends).
+ * Receives a captured transcript from the ConvAI agent (either via its
+ * `capture_thought` client-tool call or directly from the frontend after a
+ * turn ends).
  *
  * POST /api/capture
  * body: { transcript: string, conversationId?: string, clarification?: string }
  *
- * Fire-and-forget on the caller side — don't block the voice loop on routing.
+ * Treated as fire-and-forget by the caller — never blocks the voice loop.
  */
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
@@ -22,32 +24,60 @@ export async function POST(req: NextRequest) {
   const clarification: string | undefined = body.clarification;
   const conversationId: string | undefined = body.conversationId;
 
-  // 1. Classify the thought
-  let classified;
+  let classified: ClassifiedThought;
   try {
     classified = await classifyThought({ transcript, clarification });
   } catch (err) {
     console.error('[capture] classifier failed', err);
-    // Fallback: log as raw note
     classified = {
-      type: 'note' as const,
-      target_app: 'notion' as const,
-      payload: { title: transcript.slice(0, 80), body: transcript, due_at: null, tags: [], target_repo: null, target_person: null },
+      type: 'note',
+      target_app: 'notion',
+      payload: {
+        title: transcript.slice(0, 80),
+        body: transcript,
+        due_at: null,
+        tags: [],
+        target_repo: null,
+        target_person: null
+      },
       confidence: 0.2,
       rationale: 'classifier-fallback'
     };
   }
 
-  // 2. Dispatch to the integration (must not throw — adapters swallow errors)
   const integrationResult = await dispatch(classified);
 
-  // 3. Persist for cross-day resurfacing
-  await saveThought({
+  const saved = await saveThought({
     transcript,
     classification: classified,
     integration_result: integrationResult,
     conversation_id: conversationId ?? null
   });
 
-  return NextResponse.json({ ok: true, classification: classified, integrationResult });
+  return NextResponse.json({
+    ok: true,
+    id: saved.id,
+    classification: classified,
+    integrationResult,
+    agent_reply: agentReplyFor(classified.target_app)
+  });
+}
+
+function agentReplyFor(app: TargetApp): string {
+  switch (app) {
+    case 'todoist':
+      return 'Captured. Sent to Todoist.';
+    case 'calendar':
+      return 'Captured. On your calendar.';
+    case 'notion':
+      return 'Noted.';
+    case 'cursor':
+      return 'Code thought. Sent to Cursor.';
+    case 'reminders':
+      return 'Reminder set.';
+    case 'imessage':
+      return 'Message draft queued.';
+    default:
+      return 'Captured.';
+  }
 }

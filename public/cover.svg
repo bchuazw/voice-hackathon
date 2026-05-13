@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="80%">
+      <stop offset="0%" stop-color="#1d2a4a"/>
+      <stop offset="100%" stop-color="#070b18"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3a86ff" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#3a86ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ink" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e8eef7"/>
+      <stop offset="100%" stop-color="#b9c5db"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <circle cx="640" cy="380" r="260" fill="url(#glow)"/>
+  <g transform="translate(640 380)" fill="none" stroke="#3a86ff" stroke-width="3" opacity="0.65">
+    <circle r="130"/>
+    <circle r="180" opacity="0.45"/>
+    <circle r="230" opacity="0.25"/>
+  </g>
+  <g transform="translate(640 380)" fill="#e8eef7">
+    <rect x="-28" y="-72" width="56" height="100" rx="28"/>
+    <path d="M -58 0 a 58 58 0 0 0 116 0" stroke="#e8eef7" stroke-width="6" fill="none"/>
+    <line x1="0" y1="58" x2="0" y2="86" stroke="#e8eef7" stroke-width="6"/>
+  </g>
+  <text x="640" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="68" fill="url(#ink)" letter-spacing="6">Archimedes</text>
+  <text x="640" y="160" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" fill="#e8eef7" opacity="0.65" letter-spacing="4">SHOWER-THOUGHT VOICE AGENT</text>
+  <text x="640" y="650" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="32" fill="url(#ink)" font-weight="300">"Never lose a shower thought again."</text>
+  <text x="640" y="690" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" fill="#e8eef7" opacity="0.6" letter-spacing="3">ElevenLabs · Cursor · ElevenHacks #8</text>
+</svg>
